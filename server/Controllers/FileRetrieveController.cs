@@ -32,5 +32,17 @@ namespace server.Controllers
             }
             return PhysicalFile(fullPath, mime);
         }
+
+        [HttpGet]
+        public ActionResult<List<string>> GetAll()
+        {
+            List<string> res = new List<string>();
+            foreach (string fileName in Directory.EnumerateFiles(_filePath))
+            {
+                var tempName = fileName.Substring(_filePath.Length);
+                res.Add(tempName);
+            }
+            return res;
+        }
     }
 }
