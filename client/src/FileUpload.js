@@ -1,31 +1,12 @@
 import "./FileUpload.css"
 import {useCallback, useRef} from "react";
 
-/**
- * Adds files to formdata
- * @param {FormData} formData 
- * @param {FileList} files 
- */
-function appendData(formData, files) {
-    for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]);
-    }
-}
-
-async function postData(formRef, files) {
+async function postData(formRef) {
     const formData = new FormData(formRef.current);
-    console.log(formData.getAll("files"));
-    // appendData(formData, form.current.files);
-    const response = await fetch(formRef.current.action, {
+    await fetch(formRef.current.action, {
         method: 'POST',
-        // mode: "cors",
-        // cache: "no-cache",
-        // credentials: "omit",
-        // redirect: "manual",
-        // referrerPolicy: "no-referrer",
         body: formData
     });
-    console.log(response.status, response.statusText);
 }
 
 function FileUpload() {
@@ -34,9 +15,7 @@ function FileUpload() {
     
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
-        console.log(fileInput, fileInput.current);
-        console.log(formRef);
-        postData(formRef, fileInput.current.files);
+        postData(formRef);
     }, [fileInput]);
 
     return (
