@@ -59,5 +59,15 @@ namespace server.Controllers
 
             return Ok(new { count = files.Count, size });
         }
+
+        [HttpDelete("{name}")]
+        public ActionResult DeletePicture(string name)
+        {
+            var fullPath = Path.Combine(_filePath, name);
+            if (System.IO.File.Exists(fullPath)) {
+                System.IO.File.Delete(fullPath);
+            }
+            return Ok();
+        }
     }
 }

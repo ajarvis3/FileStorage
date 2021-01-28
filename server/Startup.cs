@@ -27,6 +27,8 @@ namespace server
                                 {
                                     builder.WithOrigins("http://localhost:3000",
                                                         "https://ajarvis3.github.io");
+                                    builder.AllowAnyMethod();
+                                    builder.AllowAnyHeader();
                                 });
             });
         }
