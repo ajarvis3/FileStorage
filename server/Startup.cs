@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using server.Hubs;
 
 namespace server
 {
@@ -29,8 +30,10 @@ namespace server
                                                         "https://ajarvis3.github.io");
                                     builder.AllowAnyMethod();
                                     builder.AllowAnyHeader();
+                                    builder.AllowCredentials();
                                 });
             });
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +48,14 @@ namespace server
 
             app.UseRouting();
 
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+            };
+            webSocketOptions.AllowedOrigins.Add("http://localhost:3000");
+            webSocketOptions.AllowedOrigins.Add("https://ajarvis3.github.io");
+            app.UseWebSockets(webSocketOptions);
+
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
@@ -56,6 +67,7 @@ namespace server
                     await context.Response.WriteAsync("Howdy, World!");
                 });
                 endpoints.MapControllers();
+                endpoints.MapHub<FilesHub>("/fileshub");
             });
         }
     }
